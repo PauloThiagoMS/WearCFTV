@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ISIC Wear</string>
+    <string-array name="settings_array">
+        <item>DVR_IP</item>
+        <item>DVR_PORT</item>
+        <item>DVR_USER</item>
+        <item>DVR_PASSWORD</item>
+    </string-array>
+    <string name="preferences_title">Settings</string>
+    <string name="button_save_title">Save</string>
+    <string name="button_reset_title">Reset</string>
+</resources>
