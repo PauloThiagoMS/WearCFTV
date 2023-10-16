@@ -2,23 +2,65 @@ package com.wear.isicwear;
 
 import androidx.appcompat.app.AppCompatActivity;
 import org.videolan.libvlc.util.VLCVideoLayout;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import java.util.ArrayList;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.net.Uri;
+import android.provider.Settings;
+import android.util.Log;
+import android.widget.Toast;
 
 
 public class PlayerActivity extends AppCompatActivity {
     private VLCVideoLayout videoLayout;
     private MediaPlayer mediaPlayer;
     private LibVLC libVlc;
+    void checkWifiStatus(){
+        Log.i("wifi-cftv", "wifi check status");
+        Toast.makeText(getApplicationContext(),"Checking Wi-fi Status", Toast.LENGTH_SHORT).show();
+
+        /*
+         * pseudocodigo
+         * se wifi conectado
+         *   pass
+         * senao
+         *   open wifi settings
+         * */
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        Log.i("wifi-cftv", String.valueOf(networkInfo));
+        if(networkInfo!=null) {
+            if (String.valueOf(networkInfo).contains("WIFI[], state: CONNECTED/CONNECTED")){
+                Log.i("wifi-cftv", "Wi-fi Conected");
+                Toast.makeText(getApplicationContext(),"Wi-fi Conected", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Log.i("wifi-cftv", "Wi-fi Disconected - Starting wifi settings");
+                Toast.makeText(getApplicationContext(),"Wi-fi Disconected - Starting wifi settings", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            }
+        }
+        else{
+            Log.i("wifi-cftv", "Wi-fi Disconected - Starting wifi settings");
+            Log.i("wifi-cftv", "Wi-fi Off");
+
+            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        checkWifiStatus();
         final ArrayList<String> args = new ArrayList<>();
         args.add("--vout=android-display");
         args.add("-vvv");
