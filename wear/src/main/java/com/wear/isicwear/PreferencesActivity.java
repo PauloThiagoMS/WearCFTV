@@ -1,24 +1,16 @@
 package com.wear.isicwear;
 
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.provider.Settings;
-import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.AdapterView;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.text.Editable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 
 public class PreferencesActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -29,45 +21,10 @@ public class PreferencesActivity extends AppCompatActivity implements AdapterVie
     String ip;
     String port;
 
-
-    void checkWifiStatus(){
-        Log.i("wifi-cftv", "wifi check status");
-        Toast.makeText(getApplicationContext(),"Checking Wi-fi Status", Toast.LENGTH_SHORT).show();
-
-        /*
-         * pseudocodigo
-         * se wifi conectado
-         *   pass
-         * senao
-         *   open wifi settings
-         * */
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        Log.i("wifi-cftv", String.valueOf(networkInfo));
-        if(networkInfo!=null) {
-            if (String.valueOf(networkInfo).contains("WIFI[], state: CONNECTED/CONNECTED")){
-                Log.i("wifi-cftv", "Wi-fi Conected");
-                Toast.makeText(getApplicationContext(),"Wi-fi Conected", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Log.i("wifi-cftv", "Wi-fi Disconected - Starting wifi settings");
-                Toast.makeText(getApplicationContext(),"Wi-fi Disconected - Starting wifi settings", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-            }
-        }
-        else{
-            Log.i("wifi-cftv", "Wi-fi Disconected - Starting wifi settings");
-            Log.i("wifi-cftv", "Wi-fi Off");
-
-            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
-        checkWifiStatus();
         SharedPreferences sharedPref = getSharedPreferences("com.wear.isicwear", MODE_PRIVATE);
         String[] settings_keys = getResources().getStringArray(R.array.settings_array);
         ip   = sharedPref.getString(settings_keys[0], "192.168.0.2");
@@ -110,14 +67,6 @@ public class PreferencesActivity extends AppCompatActivity implements AdapterVie
                 }
             }
         });
-
-//        ImageButton wifi = findViewById(R.id.imageButtonwifi);
-//
-//        wifi.setOnClickListener(view -> {
-//            Log.i("wifi-cftv", "wifi settings called");
-//            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-//            });
-
         ImageButton save_bt = findViewById(R.id.imageButtonSave);
         save_bt.setOnClickListener(view -> {
             SharedPreferences.Editor editor = sharedPref.edit();
